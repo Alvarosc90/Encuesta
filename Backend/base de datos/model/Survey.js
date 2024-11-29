@@ -106,7 +106,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true
     },
     // Sección: INTERES COMUN
-    pregunta8: {
+    pregunta8A: {
       type: DataTypes.STRING,
       allowNull: true
     },
@@ -153,6 +153,14 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: true
     },
+    antiguedad: {
+      type: DataTypes.STRING,  // Asegúrate que sea un número
+      allowNull: true  // Puede ser null si no se responde
+    },
+    trabajo: {
+      type: DataTypes.STRING,  // Asumiendo que es texto, ajusta según el tipo adecuado
+      allowNull: true  // Puede ser null si no se responde
+    }
   }, {
     tableName: 'surveys',  // Nombre de la tabla en la base de datos
     timestamps: false      // No usar createdAt ni updatedAt

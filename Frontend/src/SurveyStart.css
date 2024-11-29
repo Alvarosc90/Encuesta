@@ -12,11 +12,13 @@
 /* Encabezado (Logo) */
 .survey-start-header {
   margin-bottom: 20px; /* Espacio debajo del logo */
+  background-color: white;
 }
 
 /* Logo */
 .survey-start-title-logo {
   max-width: 100%;
+  background-color: white;
   height: auto;
   object-fit: contain; /* Mantiene la proporción */
 }
@@ -51,4 +53,25 @@
 .survey-start-button:focus {
   outline: none;
   box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+.img2{
+  position: absolute; /* Permite posicionar la imagen en la esquina */
+  left: 0px; /* Coloca la imagen en la esquina izquierda */
+  top: 50%; /* Centra verticalmente la imagen */
+  transform: translateY(-50%); /* Ajuste fino para centrar verticalmente */
+  max-width: 20%; /* Ajusta el tamaño de la imagen */
+  height: auto; /* Mantiene la proporción de la imagen */
+}
+
+.Footer-Start{
+  display: flex;
+  justify-content: center; /* Centra el texto */
+  align-items: center; /* Centra el contenido verticalmente */
+  position: relative; /* Necesario para posicionar la imagen dentro de este contenedor */
+  font-weight: bold;
+  width: 100%; /* Asegura que ocupe todo el ancho */
+}
+
+.survey-start-title2{
+  margin-left: -30px;
 }

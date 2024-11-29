@@ -1,15 +1,32 @@
-/* styles.css */
+/* Estilos generales */
 body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  background-color: white;
+  background-color: #003366;
   color: #333;
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
 }
+
+.survey-container{
+  background-color: white;
+  border-radius: 20px;
+}
+
+/* Estilo para el párrafo debajo del título */
+p {
+  font-size: 1rem;
+  color: #333;
+  line-height: 1.6;
+  text-align: center;
+  margin: 20px auto;
+  max-width: 800px;
+  padding: 0 15px;
+}
+
 
 /* FondoTransparente: La imagen de fondo que será grande y transparente */
 .FondoTransparente {
@@ -22,53 +39,34 @@ body {
   opacity: 0.5; /* Ajusta la opacidad para que sea transparente */
   z-index: -1; /* Asegura que la imagen esté detrás de otros elementos */
 }
-/* Asegura que el header esté centrado y tenga un estilo apropiado */
+
+/* Estilo para el header */
 header {
   display: flex;
   justify-content: center;
   align-items: center;
+  border-radius: 20px;
   width: 100%;
   padding: 20px 0;
-  background-color: #fff; /* Cambia el color si lo deseas */
+  background-color: #005bb5; /* Color de fondo azul para el header */
 }
 
-/* Estilo para la imagen dentro del header */
 .TitleLogo {
   max-width: 100%; /* Ajusta el tamaño según el contenedor */
   height: auto;
   z-index: 1;
 }
 
-/* Estilo para el título */
+/* Estilo para el título principal */
 .title {
   text-align: center;
-  font-size: 1.8rem;
+  font-size: 2.5rem;
   margin-top: 20px;
-  color: #333;
+  color: #003366; /* Color oscuro para el título */
+  z-index: 2;
 }
 
-
-/* Título: Centrado en la pantalla */
-.title {
-  font-size: 2.5rem; /* Ajusta el tamaño del texto */
-  text-align: center; /* Centra el texto */
-  color: #333; /* Ajusta el color del texto, si lo deseas */
-  margin-top: 20px;
-  z-index: 2; /* Asegura que el título esté por encima de otras capas */
-}
-
-
-.container {
-  text-align: center;
-  width: 100%;
-}
-
-h1 {
-  color: #003366;
-  margin-top: 20px;
-  font-size: 2rem;
-}
-
+/* Formulario */
 form {
   max-width: 800px;
   margin: 20px auto;
@@ -77,38 +75,68 @@ form {
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-align: left;
+  background-color: #f9f9f9; /* Fondo suave para el formulario */
 }
 
-form div {
-  margin-bottom: 20px;
-}
-
-label {
-  display: block;
-  font-weight: bold;
-  margin-bottom: 8px;
+/* Títulos dentro del formulario */
+h3 {
   color: #003366;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
 }
 
-select {
+/* Agrupación de preguntas */
+.question-group {
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: #5096ff; /* Fondo blanco para las preguntas */
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo de preguntas cerradas (radio y select) */
+.question {
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.option label {
+  font-size: 1rem;
+  color: #000000;
+}
+
+select, textarea {
   width: 100%;
   padding: 10px;
   border: 1px solid #c3c3c3;
   border-radius: 4px;
-  background-color: #ffffff; /* Blanco para opciones visibles */
+  background-color: #ffffff;
   font-size: 14px;
-  color: #333; /* Color del texto */
-  appearance: none; /* Oculta la flecha por defecto */
-  background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 140"><polygon points="0,0 140,0 70,70" fill="%23003366"/></svg>');
-  background-repeat: no-repeat;
-  background-position: right 10px center;
-  background-size: 12px 12px;
+  color: #333;
 }
 
-select:focus {
+select:focus, textarea:focus {
   border-color: #0074d9;
   outline: none;
   box-shadow: 0 0 4px rgba(0, 116, 217, 0.5);
+}
+
+textarea {
+  height: 150px;
+  resize: vertical;
+}
+
+/* Botones */
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
 }
 
 button {
@@ -119,20 +147,53 @@ button {
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  display: block;
-  margin: 20px auto;
-  width: 80%;
+  width: 48%;
 }
 
 button:hover {
   background-color: #005bb5;
 }
 
-h2 {
-  color: #005bb5;
+.go-back-button {
+  background-color: #34a8ac;
+  color: #ffffff;
 }
 
+.go-back-button:hover {
+  background-color: #e4e4e4;
+  color: #0074d9;
+}
 
+/* Sección de respuesta libre */
+.preguntaAbierta {
+  margin-bottom: 15px;
+}
+
+.preguntaAbierta label {
+  font-size: 1rem;
+  color: #003366;
+}
+
+/* Estilos de las opciones en el select */
+select option {
+  color: #333;
+  background-color: #ffffff;
+}
+
+/* Fondo del contenedor */
+.container {
+  text-align: center;
+  width: 100%;
+}
+
+/* Color de encabezados de listas */
+h1, h2 {
+  color: #003366;
+  font-size: 2rem;
+  margin-top: 20px;
+}
+
+/* Estilo de lista y elementos de la encuesta */
 ul {
   max-width: 600px;
   margin: 20px auto;
@@ -154,28 +215,30 @@ li:last-child {
   border-bottom: none;
 }
 
-/* Centra todo en la pantalla */
-.container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+/* Mejor experiencia de usuario */
+select, input[type="radio"] {
+  margin-right: 10px;
 }
 
-/* Mejor experiencia de usuario */
-select option {
-  color: #333;
-  background-color: #ffffff; /* Blanco para mejor contraste */
-}
-/* CSS para los campos de respuesta libre */
+/* Sección de comentarios con campos de texto */
 textarea {
-  width: 95%;  /* Se adapta al ancho del contenedor */
-  height: 150px;  /* Altura predeterminada */
-  padding: 10px;  /* Espaciado interno */
-  font-size: 14px;  /* Tamaño de texto */
-  border: 1px solid #ccc;  /* Borde de los campos */
-  border-radius: 5px;  /* Esquinas redondeadas */
-  resize: vertical;  /* Permite redimensionar solo verticalmente */
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%;
+  background-color: #fff;
+  resize: vertical;
+}
+
+/* Fondo para diferenciación de secciones */
+.question-group:nth-child(odd) {
+  background-color: #a8e6ff; /* Fondo gris claro para las secciones impares */
+}
+
+.question-group:nth-child(even) {
+  background-color: #cecece; /* Fondo gris aún más claro para las secciones pares */
 }
 
 /* Si deseas hacer algo más personalizado solo para los campos libre_1 y libre_2 */

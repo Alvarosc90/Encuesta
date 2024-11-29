@@ -1,4 +1,4 @@
-// Route Survey.js
+// Route Surveys.js
 app.post("/api/surveys", async (req, res) => {
   try {
     // Extraer las respuestas del cuerpo de la solicitud
@@ -11,10 +11,11 @@ app.post("/api/surveys", async (req, res) => {
       pregunta5A, pregunta5B, pregunta5C, 
       pregunta6A, pregunta6B, pregunta6C, pregunta6D, pregunta6E, 
       pregunta7A, pregunta7B, pregunta7C, 
-      pregunta8, 
+      pregunta8A, 
       pregunta9A, pregunta9B, 
       pregunta10A, pregunta10B, pregunta10C, pregunta10D, pregunta10E, 
-      preguntaAbierta1, preguntaAbierta2, preguntaAbierta3
+      preguntaAbierta1, preguntaAbierta2, preguntaAbierta3,antiguedad,
+      trabajo    
     } = req.body;  
 
     // Verificar que todas las preguntas fueron respondidas
@@ -26,7 +27,7 @@ app.post("/api/surveys", async (req, res) => {
       !pregunta5A || !pregunta5B || !pregunta5C ||
       !pregunta6A || !pregunta6B || !pregunta6C || !pregunta6D || !pregunta6E ||
       !pregunta7A || !pregunta7B || !pregunta7C ||
-      !pregunta8 ||
+      !pregunta8A ||
       !pregunta9A || !pregunta9B ||
       !pregunta10A || !pregunta10B || !pregunta10C || !pregunta10D || !pregunta10E
     ) {
@@ -42,12 +43,14 @@ app.post("/api/surveys", async (req, res) => {
       pregunta5A, pregunta5B, pregunta5C,
       pregunta6A, pregunta6B, pregunta6C, pregunta6D, pregunta6E,
       pregunta7A, pregunta7B, pregunta7C,
-      pregunta8,
+      pregunta8A,
       pregunta9A, pregunta9B,
       pregunta10A, pregunta10B, pregunta10C, pregunta10D, pregunta10E,
       preguntaAbierta1: preguntaAbierta1 || null,  // Guardar respuesta libre o null si está vacía
       preguntaAbierta2: preguntaAbierta2 || null,  
-      preguntaAbierta3: preguntaAbierta3 || null   // Nueva pregunta abierta
+      preguntaAbierta3: preguntaAbierta3 || null,
+      antiguedad,
+      trabajo   
     });
 
     // Responde con la nueva encuesta creada

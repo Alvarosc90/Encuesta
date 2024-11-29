@@ -1,10 +1,12 @@
-//App.jsx
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import './App.css';
+import Footer from './Footer'; 
 
 const questions = {
+  "Antiguedad": "Trabajo en Capemi desde hace",
+  "Ubicacion": "Mi lugar de trabajo es ",
   "1A": "Conozco la visión y misión del nuevo Capemi",
   "1B": "Conozco los valores del Nuevo Capemi",
   "1C": "Sé cómo impacta mi trabajo en la calidad del producto y en los resultados de Capemi",
@@ -24,7 +26,7 @@ const questions = {
   "6B": "Mi jefe representa los valores de Capemi y es un ejemplo a seguir",
   "6C": "Mi jefe dialoga conmigo sobre la calidad de mi trabajo y sobre cómo podría mejorar",
   "6D": "Mi jefe comparte sus conocimientos y experiencias",
-  "6E":"Mi jefe me brinda la información y pautas claras que necesito para cumplir con las tareas/objetivos",
+  "6E": "Mi jefe me brinda la información y pautas claras que necesito para cumplir con las tareas/objetivos",
   "7A": "En Capemi se reconocen y celebran los logros",
   "7B": "Creo que en Capemi somos escuchados y se ayuda a quien lo necesite, evaluando la situación",
   "7C": "Mi jefe me felicita cuando trabajo muy bien",
@@ -36,15 +38,23 @@ const questions = {
   "10C": "Estoy satisfecho con la estabilidad laboral que me brinda Capemi",
   "10D": "En Capemi hay un clima laboral positivo",
   "10E": "Recomendaría a Capemi a un amigo que esté buscando trabajo",
-  "11A": "¿Cuáles son las 3 cosas que MÁS VALORAS, o que te gustan de trabajar en Capemi?",
-  "11B": "¿Cuáles son las 3 cosas que MENOS te gustan, o A MEJORAR que tiene Capemi?",
-  "11C": "¿Te interesa agregar algo más?",
   "PREGUNTAS ABIERTAS": [
-    "¿Qué te gustaría cambiar en el ambiente de trabajo?",
-    "¿Qué sugerencias tienes para mejorar la comunicación interna?",
-    "¿Te interesa agregar algo más?"
+    "¿Cuales son las 3 cosas que MAS VALORAS, o que te gustan de trabajar en Capemi? ?",
+    "¿Cuales son las 3 cosas que MENOS te gustan,  o A MEJORAR que tiene Capemi??",
+    "¿Te interesa agregar algo más?, ¡¡te leemos!!"
   ]
 };
+
+const optionsAntiguedad = [
+  "0-1 años",
+  "De 1 a 5 años",
+  "Más de 5 años"
+];
+
+const optionsLugarTrabajo = [
+  { value: "Planta", subItems: ["Producción", "Mantenimiento", "Logística"] },
+  { value: "Sectores Administrativos/Staff", subItems: ["Recursos Humanos", "Finanzas", "Marketing", "Ventas", "IT"] }
+];
 
 const options = [
   "Totalmente de acuerdo",
@@ -56,17 +66,17 @@ const options = [
 const App = () => {
   const navigate = useNavigate();
 
-  // Inicializa las respuestas con respuestas vacías o predeterminadas
   const [responses, setResponses] = useState({});
+  const payload = { respuestas: responses }; // El objeto que el backend espera
 
-  // Agregar respuestas vacías para las preguntas cuando el componente se monta
+  // Inicializa las respuestas con respuestas vacías o predeterminadas
   useEffect(() => {
     let newResponses = {};
     Object.keys(questions).forEach(group => {
       if (Array.isArray(questions[group])) {
         // Si es un array (pregunta abierta), agregamos una respuesta vacía
         questions[group].forEach((question, index) => {
-          newResponses[`free_question_${index + 1}`] = "";
+          newResponses[`preguntaAbierta${index + 1}`] = "";
         });
       } else {
         // Si no es un array, agregamos una respuesta vacía para cada pregunta cerrada
@@ -86,30 +96,47 @@ const App = () => {
   // Maneja el cambio de respuesta para las preguntas libres
   const handleFreeResponseChange = (index, value) => {
     const updatedResponses = { ...responses };
-    updatedResponses[`free_question_${index + 1}`] = value;
+    updatedResponses[`preguntaAbierta${index + 1}`] = value;
     setResponses(updatedResponses);
   };
 
   // Maneja el envío del formulario
   const handleSubmit = (e) => {
     e.preventDefault();
-  
-    // Crear un objeto solo con las respuestas (sin las claves numéricas)
+
+    // Reformatea las respuestas para que coincidan con las claves esperadas por el backend
+    // Reformatea las respuestas para que coincidan con las claves esperadas por el backend
     const surveyData = {};
-  
-    // Filtrar solo las respuestas de las preguntas de texto (textarea) y eliminar las claves numéricas
-    Object.keys(responses).forEach((key) => {
-      if (key.includes("free_question") && responses[key] !== "") {
-        surveyData[key] = responses[key];
-      } else if (!key.includes("free_question") && responses[key] !== "") {
-        surveyData[key] = responses[key];
-      }
-    });
-  
-    console.log("Datos que se están enviando:", surveyData);
-  
+
+    // Asignar las respuestas de las preguntas cerradas, si existen
+    surveyData.antiguedad = responses["Antiguedad"] || null;
+    surveyData.trabajo = responses["Ubicacion"] || null;
+
+    // Aquí mapeamos las respuestas de las preguntas cerradas
+    for (let i = 1; i <= 10; i++) {
+      ['A', 'B', 'C', 'D', 'E'].forEach(letter => {
+        const key = `${i}${letter}`;
+        if (responses[key]) {
+          surveyData[`pregunta${i}${letter}`] = responses[key];
+        }
+      });
+    }
+
+    // Agregar las respuestas abiertas de manera directa
+    surveyData.preguntaAbierta1 = responses.preguntaAbierta1 || null;
+    surveyData.preguntaAbierta2 = responses.preguntaAbierta2 || null;
+    surveyData.preguntaAbierta3 = responses.preguntaAbierta3 || null;
+
+    // Imprimir los datos para ver cómo quedan antes de enviarlos
+    console.log("Datos que se enviarán:", surveyData);
+
+
+    // Imprimir los datos para ver cómo quedan antes de enviarlos
+    console.log("Datos que se enviarán:", surveyData);
+
+    // Realizar el POST al servidor
     axios
-      .post("http://localhost:5000/api/surveys", surveyData, {
+      .post("http://localhost:5000/api/surveys", { respuestas: surveyData }, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -123,7 +150,6 @@ const App = () => {
         alert("Hubo un error al enviar las respuestas.");
       });
   };
-  
 
   // Función para navegar hacia atrás
   const handleGoBack = () => {
@@ -131,60 +157,103 @@ const App = () => {
   };
 
   return (
-    <div className="survey-container">
-      <header>
-        <img className="TitleLogo" src="/fondo2.png" alt="Logo" />
-      </header>
-      <h2 className="title">Encuesta de Clima Laboral</h2>
+    <>
+      <div className="survey-container">
 
-      <img className="FondoTransparente" src="/fondo.png" alt="Capemi" />
-      <form onSubmit={handleSubmit}>
-        {Object.keys(questions).map((group, groupIndex) => (
-          <div key={groupIndex} className="question-group">
-            <h3>{group}</h3>
-            {Array.isArray(questions[group]) ? (
-              // Preguntas abiertas
-              questions[group].map((question, index) => (
-                <div key={index} className="free-question">
-                  <label>{question}</label>
-                  <textarea
-                    value={responses[`free_question_${index + 1}`]}
-                    onChange={(e) => handleFreeResponseChange(index, e.target.value)}
-                    required
-                  />
+        <header>
+          <img className="TitleLogo" src="/fondo2.png" alt="Logo" />
+        </header>
+        <h2 className="title">Encuesta de Clima Laboral</h2>
+        <p>Te invitamos a responder de manera anónima nuestra encuesta de clima laboral  2024 .
+          Valoramos tu opinión sincera y transparente en relación a los temas consultados. Los resultados servirán para definir planes de acción mejorando  nuestro clima y trabajo.
+
+          Responder las siguientes preguntas (MARCAR la OPCION ELEGIDA que se acerque a tu forma de pensar o sentir ).
+          Muchas gracias por tu tiempo y compromiso en responder esta encuesta!!
+        </p>
+        <img className="FondoTransparente" src="/fondo.png" alt="Capemi" />
+        <form onSubmit={handleSubmit}>
+          {Object.keys(questions).map((group, groupIndex) => (
+            <div key={groupIndex} className="question-group">
+              <h3>{group}</h3>
+              {Array.isArray(questions[group]) ? (
+                // Preguntas abiertas
+                questions[group].map((question, index) => (
+                  <div key={index} className="preguntaAbierta">
+                    <label>{question}</label>
+                    <textarea
+                      value={responses[`preguntaAbierta${index + 1}`]}
+                      onChange={(e) => handleFreeResponseChange(index, e.target.value)}
+                      required
+                    />
+                  </div>
+                ))
+              ) : (
+                // Preguntas cerradas (con opciones)
+                <div className="question">
+                  <label>{questions[group]}</label>
+                  {group === "Antiguedad" ? (
+                    <select
+                      value={responses[group]}
+                      onChange={(e) => handleChange(group, e.target.value)}
+                      required
+                    >
+                      <option value="">Seleccione una opción</option>
+                      {optionsAntiguedad.map((option, idx) => (
+                        <option key={idx} value={option}>
+                          {option}
+                        </option>
+                      ))}
+                    </select>
+                  ) : group === "Ubicacion" ? (
+                    <select
+                      value={responses[group]}
+                      onChange={(e) => handleChange(group, e.target.value)}
+                      required
+                    >
+                      <option value="">Seleccione una opción</option>
+                      {optionsLugarTrabajo.map((option, idx) => (
+                        <optgroup key={idx} label={option.value}>
+                          {option.subItems.map((subOption, subIdx) => (
+                            <option key={subIdx} value={subOption}>
+                              {subOption}
+                            </option>
+                          ))}
+                        </optgroup>
+                      ))}
+                    </select>
+                  ) : (
+                    // Otros tipos de preguntas con respuestas predeterminadas
+                    options.map((option, idx) => (
+                      <div key={idx} className="option">
+                        <label>
+                          <input
+                            type="radio"
+                            name={group}
+                            value={option}
+                            checked={responses[group] === option}
+                            onChange={(e) => handleChange(group, e.target.value)}
+                            required
+                          />
+                          {option}
+                        </label>
+                      </div>
+                    ))
+                  )}
                 </div>
-              ))
-            ) : (
-              // Preguntas cerradas (con opciones)
-              <div className="question">
-                <label>{questions[group]}</label>
-                <select
-                  value={responses[group]}
-                  onChange={(e) => handleChange(group, e.target.value)}
-                  required
-                >
-                  <option value="">Seleccione una opción</option>
-                  {options.map((option, idx) => (
-                    <option key={idx} value={option}>
-                      {option}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )}
-          </div>
-        ))}
+              )}
+            </div>
+          ))}
 
-        <div className="actions">
-          <button className="back-button" onClick={handleGoBack} type="button">
-            Volver
-          </button>
-          <button className="submit-button" type="submit">
-            Enviar respuestas
-          </button>
-        </div>
-      </form>
-    </div>
+          <div className="buttons">
+            <button type="button" className="go-back-button" onClick={handleGoBack}>
+              Volver
+            </button>
+            <button type="submit">Enviar Respuestas</button>
+          </div>
+        </form>
+      </div>
+      <Footer />
+    </>
   );
 };
 

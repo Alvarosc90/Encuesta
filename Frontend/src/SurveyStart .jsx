@@ -36,7 +36,7 @@ const SurveyStart = () => {
         <img className="survey-start-title-logo" src="/fondo2.png" alt="Logo" />
       </header>
       <h2 className="survey-start-title">Bienvenido al sistema de Encuestas</h2>
-      
+
       <button className="survey-start-button" onClick={handleStartSurvey}>
         Iniciar Encuesta
       </button>
@@ -57,21 +57,26 @@ const SurveyStart = () => {
 
       {/* Botón de estadísticas habilitado solo si la contraseña es correcta */}
       <div style={{ marginTop: '20px' }}>
-        <button 
-          onClick={handleStatisticsClick} 
+        <button
+          onClick={handleStatisticsClick}
           disabled={!isPasswordCorrect} // Deshabilitar el botón si la contraseña es incorrecta
           style={{
             padding: '10px 20px',
             backgroundColor: isPasswordCorrect ? '#4CAF50' : '#9e9e9e',
             color: 'white',
             border: 'none',
-            borderRadius: '5px',
+            borderRadius: '10px',
             cursor: isPasswordCorrect ? 'pointer' : 'not-allowed',
           }}
         >
           Ver Estadísticas
         </button>
       </div>
+      <div className='Footer-Start'>
+        <h4 className="survey-start-title2">Recursos humanos</h4>
+        <img src="/fondo.png" alt="Logo de Recursos Humanos" className="img2" />
+      </div>
+
     </div>
   );
 };

@@ -1,35 +1,194 @@
-.statistics-container {
-    padding: 20px;
-  }
-  
-  .charts-container {
-    display: flex;
-    gap: 20px;
-  }
-  
-  .chart {
-    width: 50%;
-  }
-  
-  .free-response-table {
-    margin-top: 30px;
-  }
-  
-  table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  table, th, td {
-    border: 1px solid #ddd;
-  }
-  
-  th, td {
-    padding: 10px;
-    text-align: left;
-  }
-  
-  th {
-    background-color: #f4f4f4;
-  }
-  
+.main-Statistics{
+ background-color: white;
+ border-radius: 20px;
+}
+/* Contenedor Principal */
+div {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Títulos */
+h2 {
+  text-align: center;
+  color: #333;
+}
+
+h3 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Filtro de Pregunta */
+#question-filter {
+  padding: 5px 10px;
+  font-size: 16px;
+  margin-right: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+}
+
+/* Gráficos */
+canvas {
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.pie-chart-container,
+.bar-chart-container {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+/* Tabla de Respuestas Abiertas */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+  background-color: #290000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+th, td {
+  border: 1px solid black;
+  padding: 12px 15px;
+  text-align: left;
+}
+
+th {
+  background-color: black;
+  font-weight: bold;
+}
+
+tr:nth-child(even) {
+  background-color: black;
+}
+
+/* Botón para Volver al Home */
+button {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+.chart-wrapper {
+  text-align: center;
+  margin-bottom: 30px;
+  width: auto;
+  height: 500px;
+}
+
+.chart-container1 {
+  width: 500px; /* Ajusta el tamaño deseado del gráfico */
+  height: 600px; /* Ajusta el tamaño deseado del gráfico */
+  margin: 0 auto; /* Centra el gráfico */
+}
+
+.chart-container {
+  width: 600px; /* Ajusta el tamaño deseado del gráfico */
+  height: auto; /* Ajusta el tamaño deseado del gráfico */
+  margin: 20 auto; /* Centra el gráfico */
+
+}
+
+
+.chart-container canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Contenedor principal de la paginación */
+.pagination-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Estilo de los botones de navegación */
+.pagination-container button {
+  background-color: #4CAF50; /* Color verde */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+/* Hover para los botones */
+.pagination-container button:hover {
+  background-color: #45a049;
+}
+
+/* Desactivar los botones cuando no se puede navegar */
+.pagination-container button:disabled {
+  background-color: #c2c2c2;
+  cursor: not-allowed;
+}
+
+/* Estilo para el texto de la pregunta abierta */
+.pagination-container span {
+  font-size: 18px;
+  color: #555;
+  text-align: center;
+  flex-grow: 1;
+}
+
+/* Estilo de la tabla de respuestas abiertas */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th, td {
+  padding: 12px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+td {
+  background-color: #ffffff;
+}
+
+td {
+  word-wrap: break-word; /* Para evitar que el texto largo se salga */
+}
+
+/* Mejorar la presentación de la tabla */
+table thead {
+  font-weight: bold;
+}
+
+table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+table tbody tr:nth-child(odd) {
+  background-color: #fff;
+}

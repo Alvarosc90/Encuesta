@@ -1,0 +1,35 @@
+.statistics-container {
+    padding: 20px;
+  }
+  
+  .charts-container {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .chart {
+    width: 50%;
+  }
+  
+  .free-response-table {
+    margin-top: 30px;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  table, th, td {
+    border: 1px solid #ddd;
+  }
+  
+  th, td {
+    padding: 10px;
+    text-align: left;
+  }
+  
+  th {
+    background-color: #f4f4f4;
+  }
+  

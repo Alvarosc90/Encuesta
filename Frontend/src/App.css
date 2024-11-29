@@ -1,0 +1,185 @@
+/* styles.css */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: white;
+  color: #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* FondoTransparente: La imagen de fondo que será grande y transparente */
+.FondoTransparente {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Asegura que la imagen cubra todo el espacio */
+  opacity: 0.5; /* Ajusta la opacidad para que sea transparente */
+  z-index: -1; /* Asegura que la imagen esté detrás de otros elementos */
+}
+/* Asegura que el header esté centrado y tenga un estilo apropiado */
+header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 20px 0;
+  background-color: #fff; /* Cambia el color si lo deseas */
+}
+
+/* Estilo para la imagen dentro del header */
+.TitleLogo {
+  max-width: 100%; /* Ajusta el tamaño según el contenedor */
+  height: auto;
+  z-index: 1;
+}
+
+/* Estilo para el título */
+.title {
+  text-align: center;
+  font-size: 1.8rem;
+  margin-top: 20px;
+  color: #333;
+}
+
+
+/* Título: Centrado en la pantalla */
+.title {
+  font-size: 2.5rem; /* Ajusta el tamaño del texto */
+  text-align: center; /* Centra el texto */
+  color: #333; /* Ajusta el color del texto, si lo deseas */
+  margin-top: 20px;
+  z-index: 2; /* Asegura que el título esté por encima de otras capas */
+}
+
+
+.container {
+  text-align: center;
+  width: 100%;
+}
+
+h1 {
+  color: #003366;
+  margin-top: 20px;
+  font-size: 2rem;
+}
+
+form {
+  max-width: 800px;
+  margin: 20px auto;
+  background-color: #e4e4e4;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: left;
+}
+
+form div {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #003366;
+}
+
+select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #c3c3c3;
+  border-radius: 4px;
+  background-color: #ffffff; /* Blanco para opciones visibles */
+  font-size: 14px;
+  color: #333; /* Color del texto */
+  appearance: none; /* Oculta la flecha por defecto */
+  background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 140"><polygon points="0,0 140,0 70,70" fill="%23003366"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 12px 12px;
+}
+
+select:focus {
+  border-color: #0074d9;
+  outline: none;
+  box-shadow: 0 0 4px rgba(0, 116, 217, 0.5);
+}
+
+button {
+  background-color: #0074d9;
+  color: #ffffff;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: block;
+  margin: 20px auto;
+  width: 80%;
+}
+
+button:hover {
+  background-color: #005bb5;
+}
+
+h2 {
+  color: #005bb5;
+}
+
+
+ul {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 0;
+  list-style: none;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+li {
+  padding: 15px;
+  border-bottom: 1px solid #f0f0f0;
+  color: #333;
+  text-align: left;
+}
+
+li:last-child {
+  border-bottom: none;
+}
+
+/* Centra todo en la pantalla */
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Mejor experiencia de usuario */
+select option {
+  color: #333;
+  background-color: #ffffff; /* Blanco para mejor contraste */
+}
+/* CSS para los campos de respuesta libre */
+textarea {
+  width: 95%;  /* Se adapta al ancho del contenedor */
+  height: 150px;  /* Altura predeterminada */
+  padding: 10px;  /* Espaciado interno */
+  font-size: 14px;  /* Tamaño de texto */
+  border: 1px solid #ccc;  /* Borde de los campos */
+  border-radius: 5px;  /* Esquinas redondeadas */
+  resize: vertical;  /* Permite redimensionar solo verticalmente */
+}
+
+/* Si deseas hacer algo más personalizado solo para los campos libre_1 y libre_2 */
+#libre_1, #libre_2 {
+  background-color: #f9f9f9;  /* Fondo suave para los campos */
+  color: #333;  /* Color de texto */
+}

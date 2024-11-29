@@ -4,7 +4,7 @@ import { Pie, Bar } from 'react-chartjs-2';
 import { Chart as ChartJS } from 'chart.js/auto';
 import { useNavigate } from 'react-router-dom';
 import './Statistics.css';
-import Footer from './Footer'; 
+import Footer from './Footer';
 
 const Statistics = () => {
   const [surveyData, setSurveyData] = useState([]);
@@ -151,104 +151,160 @@ const Statistics = () => {
     }
   };
 
+  const countDiscriminatedResponses = (surveyData) => {
+    const counts = {
+      "Totalmente de acuerdo": 0,
+      "De acuerdo": 0,
+      "Algo de acuerdo": 0,
+      "Totalmente en desacuerdo": 0,
+    };
+
+    surveyData.forEach((response) => {
+      // Iterar sobre todas las respuestas y contar cada opción para la pregunta seleccionada
+      Object.values(response).forEach((answer) => {
+        if (counts[answer] !== undefined) {
+          counts[answer]++;
+        }
+      });
+    });
+
+    return counts;
+  };
+
+
+
+  const counts = countDiscriminatedResponses(surveyData);
+
+  // Datos para el gráfico de barras discriminado
+  const barChartDataDiscriminated = {
+    labels: Object.keys(counts),
+    datasets: [
+      {
+        label: 'Total de respuestas por opción',
+        data: Object.values(counts),
+        backgroundColor: ['#FF5733', '#66B3FF', '#99FF99', '#FFCC99'],
+      },
+    ],
+  };
+
+
+
   return (
     <>
-    <div className='main-Statistics'>
-      <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-        <h2 style={{ textAlign: 'center' }}>Estadísticas de la Encuesta</h2>
+      <div className='main-Statistics'>
+        <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
+          <h2 style={{ textAlign: 'center' }}>Estadísticas de la Encuesta</h2>
 
-        {/* Filtro de pregunta */}
-        <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-          <label htmlFor="question-filter" style={{ marginRight: '10px' }}>Selecciona una pregunta:</label>
-          <select
-            id="question-filter"
-            value={selectedQuestion}
-            onChange={handleQuestionChange}
-            style={{ padding: '5px 10px', fontSize: '16px' }}
-          >
-            {Object.keys(questionLabels).map((key) => (
-              <option key={key} value={key}>{questionLabels[key]}</option>
-            ))}
-          </select>
-        </div>
-
-        {/* Mostrar gráficos */}
-        <div className="chart-wrapper" style={{ textAlign: 'center', marginBottom: '30px' }}>
-          <h3>Gráfico de Torta</h3>
-          <div className="chart-container1">
-            <Pie
-              data={pieChartData}
-              options={{
-                responsive: true,
-                maintainAspectRatio: false,
-                width: 600,
-                height: 450,
-                plugins: {
-                  legend: { position: 'top' }
-                }
-              }}
-            />
-          </div>
-        </div>
-
-        <div className="chart-wrapper" style={{ textAlign: 'center', marginBottom: '30px' }}>
-          <h3>Gráfico de Barras</h3>
-          <div className="chart-container">
-            <Bar
-              data={barChartData}
-              options={{
-                responsive: true,
-                maintainAspectRatio: false,
-                width: 600,
-                height: 450,
-                scales: {
-                  x: { title: { display: true, text: 'Respuestas' } },
-                  y: { title: { display: true, text: 'Cantidad' } },
-                },
-              }}
-            />
-          </div>
-        </div>
-
-        {/* Mostrar preguntas abiertas en tabla */}
-        <div>
-          <h3>Respuestas a Preguntas Abiertas</h3>
-          <div className="pagination-container">
-            <button onClick={prevPage} disabled={openEndedPage === 0}>Anterior</button>
-            <span>{openEndedQuestions[openEndedPage]}</span>
-            <button onClick={nextPage} disabled={openEndedPage === openEndedQuestions.length - 1}>Siguiente</button>
+          {/* Filtro de pregunta */}
+          <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+            <label htmlFor="question-filter" style={{ marginRight: '10px' }}>Selecciona una pregunta:</label>
+            <select
+              id="question-filter"
+              value={selectedQuestion}
+              onChange={handleQuestionChange}
+              style={{ padding: '5px 10px', fontSize: '16px' }}
+            >
+              {Object.keys(questionLabels).map((key) => (
+                <option key={key} value={key}>{questionLabels[key]}</option>
+              ))}
+            </select>
           </div>
 
-          <div style={{ marginTop: '20px' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-              <thead>
-                <tr>
-                  <th style={{ border: '1px solid #ddd', padding: '8px' }}>Respuesta</th>
-                </tr>
-              </thead>
-              <tbody>
-                {openEndedResponses.map((response, index) => (
-                  <tr key={index}>
-                    <td style={{ border: '1px solid #ddd', padding: '8px' }}>
-                      {response || 'Sin respuesta'}
-                    </td>
+          {/* Mostrar gráficos */}
+          <div className="chart-wrapper" style={{ textAlign: 'center', marginBottom: '30px' }}>
+            <h3>Gráfico de Torta</h3>
+            <div className="chart-container1">
+              <Pie
+                data={pieChartData}
+                options={{
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  width: 600,
+                  height: 450,
+                  plugins: {
+                    legend: { position: 'top' }
+                  }
+                }}
+              />
+            </div>
+          </div>
+
+          <div className="chart-wrapper" style={{ textAlign: 'center', marginBottom: '30px' }}>
+            <h3>Gráfico de Barras</h3>
+            <div className="chart-container">
+              <Bar
+                data={barChartData}
+                options={{
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  width: 600,
+                  height: 450,
+                  scales: {
+                    x: { title: { display: true, text: 'Respuestas' } },
+                    y: { title: { display: true, text: 'Cantidad' } },
+                  },
+                }}
+              />
+            </div>
+          </div>
+
+          {/* Mostrar preguntas abiertas en tabla */}
+          <div>
+            <h3>Respuestas a Preguntas Abiertas</h3>
+            <div className="pagination-container">
+              <button onClick={prevPage} disabled={openEndedPage === 0}>Anterior</button>
+              <span>{openEndedQuestions[openEndedPage]}</span>
+              <button onClick={nextPage} disabled={openEndedPage === openEndedQuestions.length - 1}>Siguiente</button>
+            </div>
+
+            <div style={{ marginTop: '20px' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <thead>
+                  <tr>
+                    <th style={{ border: '1px solid #ddd', padding: '8px' }}>Respuesta</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          {/* Botón para volver al home */}
-          <div style={{ textAlign: 'center', marginTop: '20px' }}>
-            <button onClick={() => navigate('/')} style={{ padding: '10px 20px', fontSize: '16px', backgroundColor: '#4CAF50', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
-              Volver al Home
-            </button>
-          </div>
-        </div>
-        
+                </thead>
+                <tbody>
+                  {openEndedResponses.map((response, index) => (
+                    <tr key={index}>
+                      <td style={{ border: '1px solid #ddd', padding: '8px' }}>
+                        {response || 'Sin respuesta'}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
 
+          </div>
+          <div className="chart-wrapper" style={{ textAlign: 'center', marginBottom: '30px' }}>
+            <h3>Total de Respuestas Discriminado por Opción</h3>
+            <div className="chart-container">
+              <Bar
+                data={barChartDataDiscriminated}
+                options={{
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  width: 600,
+                  height: 450,
+                  plugins: {
+                    legend: { position: 'top' },
+                  },
+                }}
+              />
+            </div>
+            {/* Botón para volver al home */}
+            <div style={{ textAlign: 'center', marginTop: '20px' }}>
+              <button onClick={() => navigate('/')} style={{ padding: '10px 20px', fontSize: '16px', backgroundColor: '#4CAF50', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
+                Volver al Home
+              </button>
+            </div>
+          </div>
+
+
+        </div>
       </div>
-    </div>
-    <Footer />
+      <Footer />
     </>
   );
 };

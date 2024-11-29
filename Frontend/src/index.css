@@ -27,6 +27,9 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  background-image: url('/fondo.png'); /* Ruta a la imagen */
+  background-repeat: repeat;  /* Hace que la imagen se repita */
+  background-size: 150px;      /* Mantiene el tamaño original de la imagen */
 }
 
 h1 {

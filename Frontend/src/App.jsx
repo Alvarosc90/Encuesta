@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import './App.css';
+import Modal from './Modal';  // Cambié 'modal' a 'Modal' para que coincida con el componente
 import Footer from './Footer'; 
+
 
 const questions = {
   "Antiguedad": "Trabajo en Capemi desde hace",
@@ -67,52 +69,43 @@ const App = () => {
   const navigate = useNavigate();
 
   const [responses, setResponses] = useState({});
-  const payload = { respuestas: responses }; // El objeto que el backend espera
+  const [modal, setModal] = useState({ isOpen: false, message: '', type: '' });  // Aquí definimos el estado del modal
+  const payload = { respuestas: responses };
 
-  // Inicializa las respuestas con respuestas vacías o predeterminadas
   useEffect(() => {
     let newResponses = {};
     Object.keys(questions).forEach(group => {
       if (Array.isArray(questions[group])) {
-        // Si es un array (pregunta abierta), agregamos una respuesta vacía
         questions[group].forEach((question, index) => {
           newResponses[`preguntaAbierta${index + 1}`] = "";
         });
       } else {
-        // Si no es un array, agregamos una respuesta vacía para cada pregunta cerrada
         newResponses[group] = "";
       }
     });
     setResponses(newResponses);
   }, []);
 
-  // Maneja el cambio de respuesta para las preguntas con opciones
   const handleChange = (group, value) => {
     const updatedResponses = { ...responses };
     updatedResponses[group] = value;
     setResponses(updatedResponses);
   };
 
-  // Maneja el cambio de respuesta para las preguntas libres
   const handleFreeResponseChange = (index, value) => {
     const updatedResponses = { ...responses };
     updatedResponses[`preguntaAbierta${index + 1}`] = value;
     setResponses(updatedResponses);
   };
 
-  // Maneja el envío del formulario
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Reformatea las respuestas para que coincidan con las claves esperadas por el backend
-    // Reformatea las respuestas para que coincidan con las claves esperadas por el backend
     const surveyData = {};
 
-    // Asignar las respuestas de las preguntas cerradas, si existen
     surveyData.antiguedad = responses["Antiguedad"] || null;
     surveyData.trabajo = responses["Ubicacion"] || null;
 
-    // Aquí mapeamos las respuestas de las preguntas cerradas
     for (let i = 1; i <= 10; i++) {
       ['A', 'B', 'C', 'D', 'E'].forEach(letter => {
         const key = `${i}${letter}`;
@@ -122,19 +115,12 @@ const App = () => {
       });
     }
 
-    // Agregar las respuestas abiertas de manera directa
     surveyData.preguntaAbierta1 = responses.preguntaAbierta1 || null;
     surveyData.preguntaAbierta2 = responses.preguntaAbierta2 || null;
     surveyData.preguntaAbierta3 = responses.preguntaAbierta3 || null;
 
-    // Imprimir los datos para ver cómo quedan antes de enviarlos
     console.log("Datos que se enviarán:", surveyData);
 
-
-    // Imprimir los datos para ver cómo quedan antes de enviarlos
-    console.log("Datos que se enviarán:", surveyData);
-
-    // Realizar el POST al servidor
     axios
       .post("http://localhost:5000/api/surveys", { respuestas: surveyData }, {
         headers: {
@@ -142,8 +128,8 @@ const App = () => {
         },
       })
       .then(() => {
-        alert("Respuestas enviadas correctamente");
-        navigate("/"); // Redirige al home
+        setModal({ isOpen: true, message: "Respuestas enviadas correctamente", type: 'success' });
+        setTimeout(() => navigate("/"), 2000);
       })
       .catch((error) => {
         console.error("Error al enviar las respuestas:", error);
@@ -151,32 +137,26 @@ const App = () => {
       });
   };
 
-  // Función para navegar hacia atrás
   const handleGoBack = () => {
     navigate(-1); // Redirige a la página anterior
+  };
+
+  const handleCloseModal = () => {
+    setModal({ isOpen: false, message: '', type: '' });
   };
 
   return (
     <>
       <div className="survey-container">
-
         <header>
           <img className="TitleLogo" src="/fondo2.png" alt="Logo" />
         </header>
-        <h2 className="title">Encuesta de Clima Laboral</h2>
-        <p>Te invitamos a responder de manera anónima nuestra encuesta de clima laboral  2024 .
-          Valoramos tu opinión sincera y transparente en relación a los temas consultados. Los resultados servirán para definir planes de acción mejorando  nuestro clima y trabajo.
-
-          Responder las siguientes preguntas (MARCAR la OPCION ELEGIDA que se acerque a tu forma de pensar o sentir ).
-          Muchas gracias por tu tiempo y compromiso en responder esta encuesta!!
-        </p>
-        <img className="FondoTransparente" src="/fondo.png" alt="Capemi" />
+        <h3 className="title">Encuesta de Clima Laboral</h3>
         <form onSubmit={handleSubmit}>
           {Object.keys(questions).map((group, groupIndex) => (
             <div key={groupIndex} className="question-group">
               <h3>{group}</h3>
               {Array.isArray(questions[group]) ? (
-                // Preguntas abiertas
                 questions[group].map((question, index) => (
                   <div key={index} className="preguntaAbierta">
                     <label>{question}</label>
@@ -188,7 +168,6 @@ const App = () => {
                   </div>
                 ))
               ) : (
-                // Preguntas cerradas (con opciones)
                 <div className="question">
                   <label>{questions[group]}</label>
                   {group === "Antiguedad" ? (
@@ -222,7 +201,6 @@ const App = () => {
                       ))}
                     </select>
                   ) : (
-                    // Otros tipos de preguntas con respuestas predeterminadas
                     options.map((option, idx) => (
                       <div key={idx} className="option">
                         <label>
@@ -243,7 +221,6 @@ const App = () => {
               )}
             </div>
           ))}
-
           <div className="buttons">
             <button type="button" className="go-back-button" onClick={handleGoBack}>
               Volver
@@ -251,6 +228,7 @@ const App = () => {
             <button type="submit">Enviar Respuestas</button>
           </div>
         </form>
+        {modal.isOpen && <Modal message={modal.message} onClose={handleCloseModal} type={modal.type} />}
       </div>
       <Footer />
     </>

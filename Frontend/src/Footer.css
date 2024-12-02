@@ -12,11 +12,15 @@
   
   .footer-content {
     display: flex;
-    justify-content: center; /* Centra el texto */
-    align-items: center; /* Centra el contenido verticalmente */
-    position: relative; /* Necesario para posicionar la imagen dentro de este contenedor */
+    flex-direction: column; /* Cambia a una disposición vertical */
+    justify-content: center; /* Centra verticalmente el contenido */
+    align-items: center; /* Centra horizontalmente el contenido */
     font-weight: bold;
     width: 100%; /* Asegura que ocupe todo el ancho */
+  }
+  
+  .title-footer {
+    text-align: center; /* Asegura el texto centrado */
   }
   
   .footer img {
@@ -26,8 +30,4 @@
     transform: translateY(-50%); /* Ajuste fino para centrar verticalmente */
     max-width: 10%; /* Ajusta el tamaño de la imagen */
     height: auto; /* Mantiene la proporción de la imagen */
-  }
-  
-  .title-footer{
-    margin-left: 280px;
   }

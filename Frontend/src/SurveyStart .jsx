@@ -42,13 +42,13 @@ const SurveyStart = () => {
       </button>
 
       {/* Campo para ingresar la contraseña */}
-      <div style={{ marginTop: '20px' }}>
+      <div style={{ marginTop: '20px'}}>
         <input
           type="password"
           placeholder="Ingresa la contraseña"
           value={password}
           onChange={handlePasswordChange}
-          style={{ padding: '10px', fontSize: '16px', marginRight: '10px' }}
+          style={{ padding: '10px', fontSize: '16px', marginRight: '10px', borderRadius:'10px' }}
         />
         <button onClick={handlePasswordSubmit} style={{ padding: '10px', fontSize: '16px' }}>
           Verificar Contraseña

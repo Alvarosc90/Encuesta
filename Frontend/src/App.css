@@ -108,7 +108,7 @@ h3 {
   margin-bottom: 20px;
   padding: 10px;
   background-color: #5096ff; /* Fondo blanco para las preguntas */
-  border-radius: 50px;
+  border-radius: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
@@ -233,11 +233,11 @@ li:last-child {
   border-bottom: none;
 }
 
-/* Mejor experiencia de usuario */
-select, input[type="radio"] {
-  margin-right: 10px;
+.button-container-app{
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-
 /* Sección de comentarios con campos de texto */
 textarea {
   font-family: Arial, sans-serif;
@@ -263,4 +263,91 @@ textarea {
 #libre_1, #libre_2 {
   background-color: #f9f9f9;  /* Fondo suave para los campos */
   color: #333;  /* Color de texto */
+}
+
+/* Estilo para el contenedor de los títulos */
+.label-App {
+  display: block; /* Asegura que el label se comporte como un bloque */
+  background: linear-gradient(45deg, #003366, #006699); /* Degradado de azul oscuro a azul más claro */
+  color: white !important ; /* Texto blanco */
+  padding: 10px; /* Espaciado interno */
+  border-radius: 20px !important ; /* Bordes redondeados */
+  text-align: center; /* Alineación centrada */
+  width: 100%; /* Ocupa todo el ancho disponible */
+  box-sizing: border-box; /* Asegura que el padding no afecte al ancho total */
+}
+
+/* Estilos generales para el botón "Enviar" */
+.button-submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  font-size: 16px;
+  background: linear-gradient(45deg, #003366, #006699); /* Degradado azul */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Efecto hover para el botón "Enviar" */
+.button-submit:hover {
+  background-color: #00224d; /* Un tono más oscuro para el hover */
+  transform: scale(1.05); /* Agrandar ligeramente al pasar el mouse */
+}
+
+/* Efecto activo para el botón "Enviar" */
+.button-submit:active {
+  transform: scale(0.98); /* Reducir el tamaño al hacer clic */
+}
+
+/* Estilo para el icono dentro del botón "Enviar" */
+.button-submit .icon {
+  margin-right: 8px;
+}
+
+/* Estilos generales para el botón "Volver al Home" */
+.button-home {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  font-size: 16px;
+  background: linear-gradient(45deg, #4CAF50, #66bb6a); /* Degradado verde */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.button-home-container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 600px;
+}
+
+/* Efecto hover para el botón "Volver al Home" */
+.button-home:hover {
+  background-color: #45a049; /* Cambia a un verde más claro */
+  transform: scale(1.05); /* Agrandar ligeramente al pasar el mouse */
+}
+
+/* Efecto activo para el botón "Volver al Home" */
+.button-home:active {
+  transform: scale(0.98); /* Reducir el tamaño al hacer clic */
+}
+
+/* Estilo para el icono dentro del botón "Volver al Home" */
+.button-home .icon {
+  margin-right: 8px;
+}
+
+/* Contenedor para el botón "Volver al Home" */
+.button-home-container {
+  text-align: center;
+  margin-top: 20px;
 }

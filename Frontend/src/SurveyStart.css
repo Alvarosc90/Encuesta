@@ -5,8 +5,10 @@
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   width: 100%;
-  max-width: 500px; /* Max-width para el tamaño del contenedor */
+  max-width: 600px; /* Max-width para el tamaño del contenedor */
   text-align: center;
+  height: 500px;
+  z-index: -3;
 }
 
 /* Encabezado (Logo) */
@@ -36,23 +38,33 @@
   max-width: 82%;
 }
 
-/* Botón */
 .survey-start-button {
+  display: flex;
+  flex-direction: column; /* Coloca el ícono encima del texto */
+  align-items: center; /* Centra el contenido horizontalmente */
+  justify-content: center; /* Centra el contenido verticalmente */
   background-color: #007bff;
   color: white;
   font-size: 1rem;
-  padding: 12px 24px;
+  padding: 10px; /* Más espacio para acomodar el ícono */
   border: none;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  width: 100%; /* Hace que el botón ocupe el ancho completo del contenedor */
-  max-width: 300px; /* Tamaño máximo para el botón */
-  margin-top: 20px;
+  width: 100%; /* Botón ocupa el ancho completo del contenedor */
+  max-width: 300px; /* Tamaño máximo del botón */
+  margin: 40px auto; /* Centra el botón horizontalmente */
+  text-align: center;
 }
 
 .survey-start-button:hover {
   background-color: #0056b3;
+}
+
+.button-icon {
+  font-size: 25px; /* Tamaño más grande para destacar el ícono */
+  margin-bottom: 8px; /* Espacio entre el ícono y el texto */
+  color: white; /* Asegura que el ícono tenga el mismo color que el texto */
 }
 
 .survey-start-button:focus {
@@ -69,6 +81,7 @@
 }
 
 .Footer-Start{
+  margin-top: 130px;
   display: flex;
   justify-content: center; /* Centra el texto */
   align-items: center; /* Centra el contenido verticalmente */
@@ -79,4 +92,118 @@
 
 .survey-start-title2{
   margin-left: -30px;
+  color: #0056b3;
+}
+
+/* Estilo para el botón del menú hamburguesa */
+.hamburger-menu {
+  font-size: 24px;
+  cursor: pointer;
+  color: white;
+  transition: transform 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+.hamburger-menu:hover {
+  color: #4CAF50;
+  transform: scale(1.1);
+}
+
+/* Contenedor del menú desplegable */
+.menu-content {
+  position: absolute;
+  top: 50px;
+  right: 10px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+  padding: 20px;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-in-out;
+  min-width: 280px;
+  max-width: 300px;
+}
+
+/* Título del menú */
+.menu-content h3 {
+  margin: 0;
+  font-size: 18px;
+  color: white;
+  text-align: center;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+/* Input para la contraseña */
+.menu-content input[type="password"] {
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  width: 100%;
+  margin-bottom: 10px;
+  transition: border 0.2s ease-in-out;
+}
+
+.menu-content input[type="password"]:focus {
+  border: 1px solid #4CAF50;
+  outline: none;
+  box-shadow: 0 0 4px rgba(76, 175, 80, 0.4);
+}
+
+/* Botón para verificar contraseña */
+.menu-content button {
+  padding: 12px 0;
+  font-size: 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.menu-content button:hover {
+  transform: scale(1.02);
+}
+
+/* Botón habilitado */
+.menu-content button:not([disabled]) {
+  background-color: #4CAF50;
+  color: #fff;
+}
+
+.menu-content button:not([disabled]):hover {
+  background-color: #45a049;
+}
+
+/* Botón deshabilitado */
+.menu-content button[disabled] {
+  background-color: #ccc;
+  color: #777;
+  cursor: not-allowed;
+}
+
+/* Transición de aparición del menú */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.img3 {
+  position: absolute; /* Posiciona la imagen de forma absoluta respecto al contenedor */
+  top: 50%; /* Centra verticalmente en el contenedor */
+  left: 50%; /* Centra horizontalmente en el contenedor */
+  transform: translate(-30%, -50%); /* Ajusta la imagen para que esté completamente centrada */
+  opacity: 0.15; /* Aplica la transparencia (50% en este caso) */
+  z-index: 0; /* Coloca la imagen detrás de todo el contenido */
+  max-width: 100%; /* Ajusta el ancho de la imagen al contenedor */
+  height: auto; /* Mantiene la proporción de la imagen */
+  width: 750px;
+  pointer-events: none;
 }

@@ -3,8 +3,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import './App.css';
 import Modal from './Modal';  // Cambié 'modal' a 'Modal' para que coincida con el componente
-import Footer from './Footer'; 
-
+import Footer from './Footer';
+import { FaPaperPlane, FaHome } from 'react-icons/fa'; // Importamos los iconos que vamos a usar
 
 const questions = {
   "Antiguedad": "Trabajo en Capemi desde hace",
@@ -54,8 +54,8 @@ const optionsAntiguedad = [
 ];
 
 const optionsLugarTrabajo = [
-  { value: "Planta", subItems: ["Producción", "Mantenimiento", "Logística"] },
-  { value: "Sectores Administrativos/Staff", subItems: ["Recursos Humanos", "Finanzas", "Marketing", "Ventas", "IT"] }
+  { value: "Planta", subItems: ["Ingenieria", "Producción", "Deposito", "Laboratorio", "Compras", "Calidad", "Mantenimiento"] },
+  { value: "Sectores Administrativos/Staff", subItems: ["Recursos Humanos/Personal", "Higiene  y Seguridad", "Administración", "Comercial", "Sistemas"] }
 ];
 
 const options = [
@@ -104,7 +104,7 @@ const App = () => {
     const surveyData = {};
 
     surveyData.antiguedad = responses["Antiguedad"] || null;
-    surveyData.trabajo = responses["Ubicacion"] || null;
+    surveyData.trabajo = responses["SubUbicacion"] || null;
 
     for (let i = 1; i <= 10; i++) {
       ['A', 'B', 'C', 'D', 'E'].forEach(letter => {
@@ -145,6 +145,51 @@ const App = () => {
     setModal({ isOpen: false, message: '', type: '' });
   };
 
+  const titles = {
+    Antiguedad: "Antigüedad en la empresa",
+    Ubicacion: "Ubicación del lugar de trabajo",
+    1: "Visión, Misión y Valores del Nuevo Capemi",
+    2: "Trabajo en Equipo",
+    3: "Comunicación Interna",
+    4: "Capacitación",
+    5: "Desempeño",
+    6: "Liderazgo",
+    7: "Reconocimiento",
+    8: "Interés Común",
+    9: "Infraestructura/Seguridad",
+    10: "Clima Laboral y Motivación"
+  };
+
+  // Agrupar las preguntas cerradas por su valor (1 al 10)
+  const groupedQuestions = [
+    ["1A", "1B", "1C"],
+    ["2A", "2B", "2C"],
+    ["3A", "3B", "3C"],
+    ["4A", "4B", "4C"],
+    ["5A", "5B", "5C"],
+    ["6A", "6B", "6C", "6D", "6E"],
+    ["7A", "7B", "7C"],
+    ["8A"],
+    ["9A", "9B"],
+    ["10A", "10B", "10C", "10D", "10E"]
+  ];
+
+  const [selectedGroup, setSelectedGroup] = useState("");
+  const [selectedSubItem, setSelectedSubItem] = useState("");
+
+  // Manejar el cambio en el grupo principal
+  const handleGroupChange = (value) => {
+    setSelectedGroup(value);
+    setResponses({ ...responses, Ubicacion: value }); // Actualiza el estado de respuestas
+  };
+
+  // Manejar el cambio en el subgrupo
+  const handleSubItemChange = (value) => {
+    setSelectedSubItem(value);
+    setResponses({ ...responses, SubUbicacion: value }); // Agrega SubUbicacion a las respuestas si es necesario
+  };
+
+
   return (
     <>
       <div className="survey-container">
@@ -152,85 +197,120 @@ const App = () => {
           <img className="TitleLogo" src="/fondo2.png" alt="Logo" />
         </header>
         <h3 className="title">Encuesta de Clima Laboral</h3>
+        <p>Te invitamos a responder de manera <strong>anónima</strong> nuestra encuesta de clima laboral  2024 .
+          Valoramos tu opinión sincera y transparente en relación a los temas consultados. Los resultados servirán para definir planes de acción mejorando  nuestro clima y trabajo.
+
+          Responder las siguientes preguntas (MARCAR la OPCION ELEGIDA que se acerque a tu forma de pensar o sentir ).
+          Muchas gracias por tu tiempo y compromiso en responder esta encuesta!!
+        </p>
         <form onSubmit={handleSubmit}>
-          {Object.keys(questions).map((group, groupIndex) => (
-            <div key={groupIndex} className="question-group">
-              <h3>{group}</h3>
-              {Array.isArray(questions[group]) ? (
-                questions[group].map((question, index) => (
-                  <div key={index} className="preguntaAbierta">
-                    <label>{question}</label>
-                    <textarea
-                      value={responses[`preguntaAbierta${index + 1}`]}
-                      onChange={(e) => handleFreeResponseChange(index, e.target.value)}
-                      required
-                    />
-                  </div>
-                ))
-              ) : (
-                <div className="question">
-                  <label>{questions[group]}</label>
-                  {group === "Antiguedad" ? (
-                    <select
-                      value={responses[group]}
-                      onChange={(e) => handleChange(group, e.target.value)}
-                      required
-                    >
-                      <option value="">Seleccione una opción</option>
-                      {optionsAntiguedad.map((option, idx) => (
-                        <option key={idx} value={option}>
-                          {option}
-                        </option>
-                      ))}
-                    </select>
-                  ) : group === "Ubicacion" ? (
-                    <select
-                      value={responses[group]}
-                      onChange={(e) => handleChange(group, e.target.value)}
-                      required
-                    >
-                      <option value="">Seleccione una opción</option>
-                      {optionsLugarTrabajo.map((option, idx) => (
-                        <optgroup key={idx} label={option.value}>
-                          {option.subItems.map((subOption, subIdx) => (
-                            <option key={subIdx} value={subOption}>
-                              {subOption}
-                            </option>
-                          ))}
-                        </optgroup>
-                      ))}
-                    </select>
-                  ) : (
-                    options.map((option, idx) => (
-                      <div key={idx} className="option">
-                        <label>
-                          <input
-                            type="radio"
-                            name={group}
-                            value={option}
-                            checked={responses[group] === option}
-                            onChange={(e) => handleChange(group, e.target.value)}
-                            required
-                          />
-                          {option}
-                        </label>
-                      </div>
-                    ))
-                  )}
+          <div className="question-group">
+            <label className="label">Antigüedad en la empresa</label>
+            <select
+              value={responses["Antiguedad"] || ""}
+              onChange={(e) => handleChange("Antiguedad", e.target.value)}
+              required
+            >
+              <option value="">Seleccionar</option>
+              {optionsAntiguedad.map((option, idx) => (
+                <option key={idx} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="question-group">
+            <label className="label">Ubicación del lugar de trabajo</label>
+            <select
+              value={selectedGroup}
+              onChange={(e) => handleGroupChange(e.target.value)}
+              required
+            >
+              <option value="">Seleccionar</option>
+              {optionsLugarTrabajo.map((option, idx) => (
+                <option key={idx} value={option.value}>
+                  {option.value}
+                </option>
+              ))}
+            </select>
+
+            {/* Mostrar subitems si están disponibles */}
+            {selectedGroup && optionsLugarTrabajo.find(opt => opt.value === selectedGroup)?.subItems && (
+              <div>
+                <label className="label">Sector</label>
+                <select
+                  value={selectedSubItem}
+                  onChange={(e) => handleSubItemChange(e.target.value)}
+                  required
+                >
+                  <option value="">Seleccionar Subgrupo</option>
+                  {optionsLugarTrabajo
+                    .find(opt => opt.value === selectedGroup)
+                    .subItems.map((subItem, idx) => (
+                      <option key={idx} value={subItem}>
+                        {subItem}
+                      </option>
+                    ))}
+                </select>
+              </div>
+            )}
+          </div>
+
+
+          {/* Mostrar preguntas cerradas agrupadas */}
+          {groupedQuestions.map((group, index) => (
+            <div key={index} className="question-group">
+              <label className="label-App">{titles[index + 1]}</label>
+              {group.map((question, qIndex) => (
+                <div key={qIndex}>
+                  <label>{questions[question]}</label>
+                  <select
+                    value={responses[question] || ""}
+                    onChange={(e) => handleChange(question, e.target.value)}
+                    required
+                  >
+                    <option value="">Seleccionar</option>
+                    {options.map((option, idx) => (
+                      <option key={idx} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
                 </div>
-              )}
+              ))}
             </div>
           ))}
-          <div className="buttons">
-            <button type="button" className="go-back-button" onClick={handleGoBack}>
-              Volver
+
+          {/* Preguntas abiertas */}
+          <p className="label-App">PREGUNTAS ABIERTAS</p>
+          {questions["PREGUNTAS ABIERTAS"].map((question, idx) => (
+            <div key={idx} className="question-group">
+              <label className="label">{question}</label>
+              <textarea
+                value={responses[`preguntaAbierta${idx + 1}`] || ""}
+                onChange={(e) => handleFreeResponseChange(idx, e.target.value)}
+                required
+              />
+            </div>
+          ))}
+          <div className="button-container-app">
+            <button type="submit" className="button-submit">
+              <FaPaperPlane className="icon" /> Enviar
             </button>
-            <button type="submit">Enviar Respuestas</button>
           </div>
+
         </form>
-        {modal.isOpen && <Modal message={modal.message} onClose={handleCloseModal} type={modal.type} />}
+        {/* Botón para volver al home */}
+        <div className="button-home-container">
+          <button onClick={() => navigate('/')} className="button-home">
+            <FaHome className="icon" /> Volver al Home
+          </button>
+        </div>
+        <Footer />
+        {modal.isOpen && (
+          <Modal message={modal.message} onClose={handleCloseModal} />
+        )}
       </div>
-      <Footer />
     </>
   );
 };

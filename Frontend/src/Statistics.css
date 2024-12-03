@@ -136,9 +136,11 @@ button:hover {
   transition: background-color 0.3s ease;
 }
 
+
 /* Hover para los botones */
 .pagination-container button:hover {
   background-color: #45a049;
+  transform: scale(1.05); /* Agrandar ligeramente al pasar el mouse */
 }
 
 /* Desactivar los botones cuando no se puede navegar */

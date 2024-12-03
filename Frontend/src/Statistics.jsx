@@ -295,10 +295,33 @@ const Statistics = () => {
             </div>
             {/* Botón para volver al home */}
             <div style={{ textAlign: 'center', marginTop: '20px' }}>
-              <button onClick={() => navigate('/')} style={{ padding: '10px 20px', fontSize: '16px', backgroundColor: '#4CAF50', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
+              <button
+                onClick={() => navigate('/')}
+                style={{
+                  padding: '10px 20px',
+                  fontSize: '16px',
+                  background: 'linear-gradient(45deg, #4CAF50, #66bb6a)', /* Degradado verde */
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '5px',
+                  cursor: 'pointer',
+                  transition: 'background 0.3s ease, transform 0.2s ease',
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.background = 'linear-gradient(45deg, #45a049, #5cb85c)'; /* Degradado más claro al hacer hover */
+                  e.target.style.transform = 'scale(1.05)'; /* Agranda el botón al hacer hover */
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.background = 'linear-gradient(45deg, #4CAF50, #66bb6a)'; /* Regresa al degradado original */
+                  e.target.style.transform = 'scale(1)'; /* Vuelve al tamaño original */
+                }}
+                onMouseDown={(e) => e.target.style.transform = 'scale(0.98)'} /* Efecto de clic */
+                onMouseUp={(e) => e.target.style.transform = 'scale(1)'} /* Vuelve al tamaño original */
+              >
                 Volver al Home
               </button>
             </div>
+
           </div>
 
 

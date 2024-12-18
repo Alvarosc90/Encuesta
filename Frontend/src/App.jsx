@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import './App.css';
 import Modal from './Modal';  // Cambié 'modal' a 'Modal' para que coincida con el componente
 import Footer from './Footer';
+import api from '../api'
 import { FaPaperPlane, FaHome } from 'react-icons/fa'; // Importamos los iconos que vamos a usar
 
 const questions = {
@@ -12,6 +12,7 @@ const questions = {
   "1A": "Conozco la visión y misión del nuevo Capemi",
   "1B": "Conozco los valores del Nuevo Capemi",
   "1C": "Sé cómo impacta mi trabajo en la calidad del producto y en los resultados de Capemi",
+  "1D": "Considero que este Nuevo Capemi de hace 2 años, impulsa a la empresa a un futuro prometedor y favorable",
   "2A": "Siento que en Capemi se trabaja en equipo",
   "2B": "Mi equipo de trabajo me motiva para alcanzar los objetivos del área/ sector",
   "2C": "Existe cooperación entre los distintos sectores de Capemi",
@@ -41,27 +42,26 @@ const questions = {
   "10D": "En Capemi hay un clima laboral positivo",
   "10E": "Recomendaría a Capemi a un amigo que esté buscando trabajo",
   "PREGUNTAS ABIERTAS": [
-    "¿Cuales son las 3 cosas que MAS VALORAS, o que te gustan de trabajar en Capemi? ?",
-    "¿Cuales son las 3 cosas que MENOS te gustan,  o A MEJORAR que tiene Capemi??",
+    "¿Cuales son las 3 cosas que MAS VALORAS, o que te gustan de trabajar en Capemi?",
+    "¿Cuales son las 3 cosas que MENOS te gustan,  o A MEJORAR que tiene Capemi?",
     "¿Te interesa agregar algo más?, ¡¡te leemos!!"
   ]
 };
 
 const optionsAntiguedad = [
-  "0-1 años",
-  "De 1 a 5 años",
-  "Más de 5 años"
+  "De 0 - 1 año",
+  "De 1 año a 5 años",
+  "De 5 años a 10 años",
+  "De 10 años a 20 años",
+  "Mas de 20 años"
 ];
 
-const optionsLugarTrabajo = [
-  { value: "Planta", subItems: ["Ingenieria", "Producción", "Deposito", "Laboratorio", "Compras", "Calidad", "Mantenimiento"] },
-  { value: "Sectores Administrativos/Staff", subItems: ["Recursos Humanos/Personal", "Higiene  y Seguridad", "Administración", "Comercial", "Sistemas"] }
-];
+
 
 const options = [
   "Totalmente de acuerdo",
   "De acuerdo",
-  "Algo de acuerdo",
+  "Algo en desacuerdo",
   "Totalmente en desacuerdo"
 ];
 
@@ -71,7 +71,8 @@ const App = () => {
   const [responses, setResponses] = useState({});
   const [modal, setModal] = useState({ isOpen: false, message: '', type: '' });  // Aquí definimos el estado del modal
   const payload = { respuestas: responses };
-
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
   useEffect(() => {
     let newResponses = {};
     Object.keys(questions).forEach(group => {
@@ -93,18 +94,36 @@ const App = () => {
   };
 
   const handleFreeResponseChange = (index, value) => {
+    // Limpiar el texto y reemplazar los puntos (•) por un espacio vacío
+    const cleanText = value
+      .replace(/<p>/g, '')  // Eliminar etiquetas <p>
+      .replace(/<\/p>/g, '') // Eliminar etiquetas </p>
+      .replace(/•\s*/g, ' • ')  // Eliminar los puntos (•) y los espacios que siguen
+      .trim(); // Eliminar espacios innecesarios al inicio y final
+
+    // Ahora separamos las respuestas usando el salto de línea y las unimos con un punto y coma
+    const responsesString = cleanText.split('\n').map(item => item.trim()).filter(item => item).join('; ');
+
+    // Crear una copia del estado actual
     const updatedResponses = { ...responses };
-    updatedResponses[`preguntaAbierta${index + 1}`] = value;
+
+    // Asignar el texto limpio y separado por punto y coma a la respuesta correspondiente
+    updatedResponses[`preguntaAbierta${index + 1}`] = responsesString;
+
+    // Actualizar el estado con la respuesta limpia
     setResponses(updatedResponses);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    if (isSubmitting) return; // Evita múltiples envíos simultáneos
+    setIsSubmitting(true); // Marca como en proceso de envío
+
     const surveyData = {};
 
     surveyData.antiguedad = responses["Antiguedad"] || null;
-    surveyData.trabajo = responses["SubUbicacion"] || null;
+    surveyData.trabajo = responses["Ubicacion"] || null;
 
     for (let i = 1; i <= 10; i++) {
       ['A', 'B', 'C', 'D', 'E'].forEach(letter => {
@@ -119,26 +138,24 @@ const App = () => {
     surveyData.preguntaAbierta2 = responses.preguntaAbierta2 || null;
     surveyData.preguntaAbierta3 = responses.preguntaAbierta3 || null;
 
-    console.log("Datos que se enviarán:", surveyData);
-
-    axios
-      .post("http://localhost:5000/api/surveys", { respuestas: surveyData }, {
+    api
+      .post("/surveys", { respuestas: surveyData }, {
         headers: {
           "Content-Type": "application/json",
         },
       })
       .then(() => {
         setModal({ isOpen: true, message: "Respuestas enviadas correctamente", type: 'success' });
-        setTimeout(() => navigate("/"), 2000);
+        setTimeout(() => {
+          setIsSubmitting(false); // Restablece el estado al navegar
+          navigate("/");
+        }, 2000);
       })
       .catch((error) => {
         console.error("Error al enviar las respuestas:", error);
         alert("Hubo un error al enviar las respuestas.");
+        setIsSubmitting(false); // Restablece el estado en caso de error
       });
-  };
-
-  const handleGoBack = () => {
-    navigate(-1); // Redirige a la página anterior
   };
 
   const handleCloseModal = () => {
@@ -162,7 +179,7 @@ const App = () => {
 
   // Agrupar las preguntas cerradas por su valor (1 al 10)
   const groupedQuestions = [
-    ["1A", "1B", "1C"],
+    ["1A", "1B", "1C","1D"],
     ["2A", "2B", "2C"],
     ["3A", "3B", "3C"],
     ["4A", "4B", "4C"],
@@ -175,18 +192,16 @@ const App = () => {
   ];
 
   const [selectedGroup, setSelectedGroup] = useState("");
-  const [selectedSubItem, setSelectedSubItem] = useState("");
+
+  const optionsLugarTrabajo = [
+    { value: "Planta", description: "ingeniería, producción, depósito, laboratorio, compras, calidad, mantenimiento, mejoras" },
+    { value: "Administrativos/Staff", description: "administración, sistemas, RRHH/Personal, comercial, comercio exterior, higiene y seguridad" }
+  ];
 
   // Manejar el cambio en el grupo principal
   const handleGroupChange = (value) => {
     setSelectedGroup(value);
     setResponses({ ...responses, Ubicacion: value }); // Actualiza el estado de respuestas
-  };
-
-  // Manejar el cambio en el subgrupo
-  const handleSubItemChange = (value) => {
-    setSelectedSubItem(value);
-    setResponses({ ...responses, SubUbicacion: value }); // Agrega SubUbicacion a las respuestas si es necesario
   };
 
 
@@ -205,98 +220,96 @@ const App = () => {
         </p>
         <form onSubmit={handleSubmit}>
           <div className="question-group">
-            <label className="label">Antigüedad en la empresa</label>
-            <select
-              value={responses["Antiguedad"] || ""}
-              onChange={(e) => handleChange("Antiguedad", e.target.value)}
-              required
-            >
-              <option value="">Seleccionar</option>
+            <label className="label_title">Antigüedad en la empresa</label>
+            <div>
               {optionsAntiguedad.map((option, idx) => (
-                <option key={idx} value={option}>
+                <label key={idx}>
+                  <input
+                    type="radio"
+                    name="Antiguedad"
+                    value={option}
+                    checked={responses["Antiguedad"] === option}
+                    onChange={(e) => handleChange("Antiguedad", e.target.value)}
+                    required
+                  />
                   {option}
-                </option>
+                </label>
               ))}
-            </select>
+            </div>
           </div>
+
           <div className="question-group">
-            <label className="label">Ubicación del lugar de trabajo</label>
-            <select
-              value={selectedGroup}
-              onChange={(e) => handleGroupChange(e.target.value)}
-              required
-            >
-              <option value="">Seleccionar</option>
+            <label className="label_title">Ubicación del lugar de trabajo</label>
+            <div className="App__ubicacion">
               {optionsLugarTrabajo.map((option, idx) => (
-                <option key={idx} value={option.value}>
-                  {option.value}
-                </option>
+                <label key={idx} className="App__option">
+                  <input
+                    type="radio"
+                    name="LugarTrabajo"
+                    value={option.value}
+                    checked={selectedGroup === option.value}
+                    onChange={(e) => handleGroupChange(e.target.value)}
+                    required
+                  />
+                  <span className="App__value">{option.value}</span>
+                  <span className="App__description">{option.description}</span>
+                </label>
               ))}
-            </select>
-
-            {/* Mostrar subitems si están disponibles */}
-            {selectedGroup && optionsLugarTrabajo.find(opt => opt.value === selectedGroup)?.subItems && (
-              <div>
-                <label className="label">Sector</label>
-                <select
-                  value={selectedSubItem}
-                  onChange={(e) => handleSubItemChange(e.target.value)}
-                  required
-                >
-                  <option value="">Seleccionar Subgrupo</option>
-                  {optionsLugarTrabajo
-                    .find(opt => opt.value === selectedGroup)
-                    .subItems.map((subItem, idx) => (
-                      <option key={idx} value={subItem}>
-                        {subItem}
-                      </option>
-                    ))}
-                </select>
-              </div>
-            )}
+            </div>
           </div>
 
 
+          {/* Mostrar preguntas cerradas agrupadas */}
           {/* Mostrar preguntas cerradas agrupadas */}
           {groupedQuestions.map((group, index) => (
             <div key={index} className="question-group">
               <label className="label-App">{titles[index + 1]}</label>
               {group.map((question, qIndex) => (
-                <div key={qIndex}>
-                  <label>{questions[question]}</label>
-                  <select
-                    value={responses[question] || ""}
-                    onChange={(e) => handleChange(question, e.target.value)}
-                    required
-                  >
-                    <option value="">Seleccionar</option>
+                <div key={qIndex} className="question-item">
+                  <label className="question-text">{questions[question]}</label>
+                  <div className="question-group__options">
                     {options.map((option, idx) => (
-                      <option key={idx} value={option}>
-                        {option}
-                      </option>
+                      <label key={idx} className="option-item">
+                        <input
+                          type="radio"
+                          name={question} // Agrupamos las opciones con el nombre de la pregunta
+                          value={option}
+                          checked={responses[question] === option}
+                          onChange={(e) => handleChange(question, e.target.value)}
+                          required
+                        />
+                        <span className="option-label">{option}</span>
+                      </label>
                     ))}
-                  </select>
+                  </div>
                 </div>
               ))}
             </div>
           ))}
+
+
 
           {/* Preguntas abiertas */}
           <p className="label-App">PREGUNTAS ABIERTAS</p>
           {questions["PREGUNTAS ABIERTAS"].map((question, idx) => (
             <div key={idx} className="question-group">
               <label className="label">{question}</label>
-              <textarea
-                value={responses[`preguntaAbierta${idx + 1}`] || ""}
-                onChange={(e) => handleFreeResponseChange(idx, e.target.value)}
-                required
-              />
+              <div
+                contentEditable
+                className="editable-textarea"
+                onInput={(e) => handleFreeResponseChange(idx, e.target.innerHTML)}
+                suppressContentEditableWarning={true}
+              >
+                <p>• </p>
+                <p>• </p>
+                <p>• </p>
+              </div>
             </div>
           ))}
           <div className="button-container-app">
-            <button type="submit" className="button-submit">
-              <FaPaperPlane className="icon" /> Enviar
-            </button>
+          <button className="button__enviar" type="submit" disabled={isSubmitting}>
+        {isSubmitting ? "Enviando..." : "Enviar"}
+      </button>
           </div>
 
         </form>

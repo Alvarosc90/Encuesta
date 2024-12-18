@@ -14,6 +14,7 @@ body {
 .survey-container{
   background-color: white;
   border-radius: 20px;
+  width: 1500px;
 }
 
 /* Estilo para el párrafo debajo del título */
@@ -56,8 +57,18 @@ header {
   color: #012549;
   font-weight: bold;
   align-items: center;
-  font-size: 1.2rem;
-  text-align: center;
+  display: flex;
+  font-size: 1.1rem;
+  height: 50px;
+  width: 100%;
+  padding: 2px;
+}
+
+.App__ubicacion {
+  display: flex;
+  flex-direction: column;    /* Asegura que los elementos estén apilados verticalmente */
+  align-items: flex-start;   /* Alinea los elementos al inicio del contenedor */
+  justify-content: flex-start; /* Alinea los elementos desde el inicio (arriba) */
 }
 
 
@@ -84,13 +95,12 @@ header {
 
 /* Formulario */
 form {
-  max-width: 800px;
+  max-width: 1200px;
   margin: 20px auto;
   background-color: #e4e4e4;
   border-radius: 8px;
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  text-align: left;
   background-color: #f9f9f9; /* Fondo suave para el formulario */
 }
 
@@ -125,7 +135,7 @@ h3 {
 }
 
 .option label {
-  font-size: 1rem;
+  font-size: 0.8rem;
   color: #000000;
 }
 
@@ -166,6 +176,10 @@ button {
   border-radius: 4px;
   cursor: pointer;
   width: 48%;
+}
+
+.button__enviar{
+  background-color: #00224d;
 }
 
 button:hover {
@@ -267,16 +281,41 @@ textarea {
 
 /* Estilo para el contenedor de los títulos */
 .label-App {
-  display: block; /* Asegura que el label se comporte como un bloque */
+  display: flex; /* Asegura que el label se comporte como un bloque */
   background: linear-gradient(45deg, #003366, #006699); /* Degradado de azul oscuro a azul más claro */
   color: white !important ; /* Texto blanco */
   padding: 10px; /* Espaciado interno */
   border-radius: 20px !important ; /* Bordes redondeados */
   text-align: center; /* Alineación centrada */
+  justify-content: center;
   width: 100%; /* Ocupa todo el ancho disponible */
   box-sizing: border-box; /* Asegura que el padding no afecte al ancho total */
 }
 
+.label_title{
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.question-text{
+  display: flex;
+  background: linear-gradient(45deg, #3399ff, #a1e0ff); /* Degradado de azul oscuro a azul más claro */
+  flex-direction: column;
+  max-width: 100%;
+  justify-content: center;
+  border-radius: 20px !important ;
+}
+
+.question-group__options{
+  display: flex;
+  align-items: center;
+  justify-self: center;
+}
+
+.label-app__questions{
+  padding: 20px;
+}
 /* Estilos generales para el botón "Enviar" */
 .button-submit {
   display: flex;
@@ -350,4 +389,116 @@ textarea {
 .button-home-container {
   text-align: center;
   margin-top: 20px;
+}
+
+.editable-textarea {
+  min-height: 100px;
+  padding-left: 20px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: start;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+  white-space: pre-wrap;  /* Para manejar el salto de línea */
+
+  overflow-y: auto;
+  list-style-type: disc;
+  margin-left: 0;  /* Alinea las viñetas a la izquierda */
+}
+
+.editable-textarea p {
+  pointer-events: none;
+  margin: 0;
+  padding-left: 20px;  /* Alinea el texto a la derecha de la viñeta */
+  list-style-type: disc;
+}
+
+/* Estilo para las preguntas con letras más pequeñas */
+.small-text {
+  font-size: 20px; /* Tamaño de fuente más pequeño */
+  color: #333;     /* Color de texto */
+  font-weight: normal; /* Peso de la fuente */
+  line-height: 1.5;  /* Espaciado entre líneas */
+}
+
+/* Estilo inicial para el radio button */
+input[type="radio"] {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%; /* Para hacer que el radio sea perfectamente redondo */
+  transition: all 0.3s ease; /* Transición suave para el hover */
+  border: 2px solid #007BFF; /* Color de borde (puedes cambiarlo) */
+  background-color: white; /* Fondo blanco */
+  cursor: pointer; /* Cambia el cursor al pasar sobre el radio */
+}
+
+/* Estilo en hover */
+input[type="radio"]:hover {
+  width: 20px; /* Tamaño en hover */
+  height: 20px; /* Tamaño en hover */
+  background-color: #007BFF; /* Color de fondo al pasar el ratón */
+  border-color: #0056b3; /* Cambia el color del borde en hover */
+  transform: scale(1.2); /* Un pequeño aumento en el tamaño */
+}
+
+/* Estilo cuando el radio está seleccionado */
+input[type="radio"]:checked {
+  background-color: #007BFF; /* Fondo azul cuando está seleccionado */
+  border-color: #0056b3; /* Bordes más oscuros cuando está seleccionado */
+}
+
+/* Estilos generales para el formulario */
+.question-group {
+  margin-bottom: 1rem; /* Espaciado entre las preguntas */
+}
+
+/* Asegurarse de que el label esté alineado adecuadamente */
+.label {
+  font-size: 14px; /* Tamaño de fuente para las etiquetas */
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+/* Estilos para la sección de las opciones de trabajo */
+.App__ubicacion {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  margin-top: -1rem;
+}
+
+/* Estilos de las etiquetas que contienen el texto */
+.App__ubicacion label {
+  display: flex;
+  align-items: center; /* Alinea el texto al lado del radio */
+  margin-bottom: 0.8rem; /* Espaciado entre las opciones */
+  font-size: 15px;  /* Ajusta el tamaño del texto para evitar desbordamiento */
+  word-wrap: break-word; /* Permite que el texto largo se ajuste al contenedor */
+  max-width: 110%; /* Limita el ancho máximo de las opciones */
+}
+
+/* Mejorar el estilo del texto */
+.App__ubicacion label span {
+  word-wrap: break-word;
+  font-size: 18px;
+  max-width: 100%; /* Ajusta el texto dentro del contenedor */
+}
+
+.App__description {
+  position: absolute;
+  font-size: 14px;
+  color: #555; /* Color más tenue */
+  margin-top: 50px; /* Alinea con el radio button */
+}
+
+.App__value {
+  font-size: 16px;
+
+   font-weight: bold;
+  margin-left: 28px; /* Alinea con el radio button */
+  margin-bottom: 0.2rem; /* Espaciado con la descripción */
 }

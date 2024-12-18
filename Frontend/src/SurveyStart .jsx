@@ -58,7 +58,7 @@ const SurveyStart = () => {
           <FaBars />
         </div>
       </header>
-      <h2 className="survey-start-title">Bienvenido al sistema de Encuestas</h2>
+      <h2 className="survey-start-title">Bienvenido/a a la Encuesta de Clima Laboral</h2>
 
       <button className="survey-start-button" onClick={handleStartSurvey}>
       <FontAwesomeIcon icon={faClipboardList} className="button-icon" />
@@ -100,7 +100,7 @@ const SurveyStart = () => {
               padding: '10px',
               fontSize: '16px',
               borderRadius: '10px',
-              width: '100%',
+              width: '80%',
               backgroundColor: '#4CAF50',
               color: 'white',
               border: 'none',

@@ -2,11 +2,16 @@ require('dotenv').config();
 const express = require("express");
 const sql = require("mssql");
 const cors = require("cors");
+const path = require("path");
 const app = express();
-app.use(cors());
-app.use(express.json());
-app.use(express.json()); // Middleware para parsear JSON
 
+app.use(cors({
+  methods: 'GET,POST,PUT,DELETE',
+  allowedHeaders: 'Content-Type, Authorization'
+}));
+
+// Asegúrate de usar express.json() para parsear el cuerpo de las solicitudes
+app.use(express.json());
 
 // Configuración de la base de datos
 const dbConfig = {
@@ -34,13 +39,13 @@ const poolPromise = new sql.ConnectionPool(dbConfig)
   });
 
 app.post("/api/surveys", async (req, res) => {
-  console.log("Datos recibidos en el backend:", req.body);
+  // console.log("Datos recibidos en el backend:", req.body);
 
   // Desestructuración para capturar las respuestas del frontend
 
   const { respuestas } = req.body;
   const {
-    pregunta1A, pregunta1B, pregunta1C,
+    pregunta1A, pregunta1B, pregunta1C, pregunta1D,
     pregunta2A, pregunta2B, pregunta2C,
     pregunta3A, pregunta3B, pregunta3C,
     pregunta4A, pregunta4B, pregunta4C,
@@ -62,7 +67,7 @@ app.post("/api/surveys", async (req, res) => {
     // Crear la consulta SQL de inserción
     const query = `
         INSERT INTO surveys (
-          pregunta1A, pregunta1B, pregunta1C,
+          pregunta1A, pregunta1B, pregunta1C, pregunta1D,
           pregunta2A, pregunta2B, pregunta2C,
           pregunta3A, pregunta3B, pregunta3C,
           pregunta4A, pregunta4B, pregunta4C,
@@ -74,7 +79,7 @@ app.post("/api/surveys", async (req, res) => {
           pregunta10A, pregunta10B, pregunta10C, pregunta10D, pregunta10E,
           preguntaAbierta1, preguntaAbierta2, preguntaAbierta3,antiguedad, trabajo
         ) VALUES (
-          @pregunta1A, @pregunta1B, @pregunta1C,
+          @pregunta1A, @pregunta1B, @pregunta1C, @pregunta1D,
           @pregunta2A, @pregunta2B, @pregunta2C,
           @pregunta3A, @pregunta3B, @pregunta3C,
           @pregunta4A, @pregunta4B, @pregunta4C,
@@ -93,6 +98,7 @@ app.post("/api/surveys", async (req, res) => {
       .input('pregunta1A', sql.NVarChar, pregunta1A)
       .input('pregunta1B', sql.NVarChar, pregunta1B)
       .input('pregunta1C', sql.NVarChar, pregunta1C)
+      .input('pregunta1D', sql.NVarChar, pregunta1D)
       .input('pregunta2A', sql.NVarChar, pregunta2A)
       .input('pregunta2B', sql.NVarChar, pregunta2B)
       .input('pregunta2C', sql.NVarChar, pregunta2C)
@@ -135,6 +141,35 @@ app.post("/api/surveys", async (req, res) => {
   }
 });
 
+const { Parser } = require('json2csv');
+
+app.get("/api/download", async (req, res) => {
+  try {
+    // Conectarte al pool y obtener los datos de la base de datos
+    const pool = await poolPromise;
+    const result = await pool.request().query("SELECT * FROM surveys");
+
+    // Verificar si hay datos
+    if (result.recordset.length === 0) {
+      return res.status(404).send({ message: "No hay datos disponibles para descargar" });
+    }
+
+    // Convertir los datos a formato CSV
+    const json2csvParser = new Parser();
+    const csv = json2csvParser.parse(result.recordset);
+
+    // Configurar los encabezados para la descarga
+    res.header('Content-Type', 'text/csv');
+    res.header('Content-Disposition', 'attachment; filename="surveys.csv"');
+
+    // Enviar el archivo CSV al cliente
+    res.status(200).send(csv);
+  } catch (error) {
+    console.error("Error al descargar los datos:", error);
+    res.status(500).json({ message: "Error interno del servidor" });
+  }
+});
+
 
 // Ruta para obtener las respuestas de la encuesta
 app.get("/api/surveyData", async (req, res) => {
@@ -148,8 +183,6 @@ app.get("/api/surveyData", async (req, res) => {
   }
 });
 
-const path = require("path");
-
 // Servir archivos estáticos del frontend (carpeta 'dist')
 app.use(express.static(path.join(__dirname, "dist")));
 
@@ -158,7 +191,8 @@ app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
 
-const port = process.env.PORT || 5000;
-app.listen(port, () => {
-  console.log(`Servidor corriendo en el puerto ${port}`);
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Servidor corriendo en http://0.0.0.0:5000`);
 });

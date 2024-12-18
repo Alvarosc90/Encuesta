@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Pie, Bar } from 'react-chartjs-2';
+import api from '../api'
 import { Chart as ChartJS } from 'chart.js/auto';
 import { useNavigate } from 'react-router-dom';
 import './Statistics.css';
@@ -17,7 +18,7 @@ const Statistics = () => {
   const satisfactionOptions = [
     "Totalmente de acuerdo",
     "De acuerdo",
-    "Algo de acuerdo",
+    "Algo en desacuerdo",
     "Totalmente en desacuerdo"
   ];
 
@@ -26,6 +27,7 @@ const Statistics = () => {
     pregunta1A: "Conozco la visión y misión del nuevo Capemi",
     pregunta1B: "Conozco los valores del Nuevo Capemi",
     pregunta1C: "Sé cómo impacta mi trabajo en la calidad del producto y en los resultados de Capemi",
+    pregunta1D: "Considero que este Nuevo Capemi de hace 2 años, impulsa a la empresa a un futuro prometedor y favorable",
     pregunta2A: "Siento que en Capemi se trabaja en equipo",
     pregunta2B: "Mi equipo de trabajo me motiva para alcanzar los objetivos del área/sector",
     pregunta2C: "Existe cooperación entre los distintos sectores de Capemi",
@@ -63,10 +65,9 @@ const Statistics = () => {
   ];
 
   useEffect(() => {
-    axios
-      .get('http://localhost:5000/api/surveyData') // Cambia esta URL según sea necesario
+    api
+      .get('/surveyData') // Cambia esta URL según sea necesario
       .then((response) => {
-        console.log('Datos recibidos:', response.data); // Verifica la estructura de los datos
         setSurveyData(response.data);
         setLoading(false);
       })
@@ -82,7 +83,7 @@ const Statistics = () => {
     const counts = {
       "Totalmente de acuerdo": 0,
       "De acuerdo": 0,
-      "Algo de acuerdo": 0,
+      "Algo en desacuerdo": 0,
       "Totalmente en desacuerdo": 0,
     };
 
@@ -155,7 +156,7 @@ const Statistics = () => {
     const counts = {
       "Totalmente de acuerdo": 0,
       "De acuerdo": 0,
-      "Algo de acuerdo": 0,
+      "Algo en desacuerdo": 0,
       "Totalmente en desacuerdo": 0,
     };
 
@@ -185,9 +186,34 @@ const Statistics = () => {
         backgroundColor: ['#FF5733', '#66B3FF', '#99FF99', '#FFCC99'],
       },
     ],
+  };  
+  
+  const handleDownload = async () => {
+    try {
+      const response = await api.get('/Download', {
+        responseType: 'blob', // Especifica que la respuesta será un archivo binario (blob)
+      });
+  
+      // Verificar si la respuesta tiene datos
+      if (!response.data) {
+        alert("No se pudo descargar el archivo.");
+        return;
+      }
+  
+      // Crear una URL para el archivo descargado
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'surveys.csv'); // Nombre del archivo que se va a descargar
+      document.body.appendChild(link);
+      link.click();
+      link.remove(); // Limpiar el enlace después de hacer clic
+    } catch (error) {
+      console.error('Error al obtener el archivo:', error);
+      alert('Error al obtener el archivo.');
+    }
   };
-
-
+  
 
   return (
     <>
@@ -293,6 +319,10 @@ const Statistics = () => {
                 }}
               />
             </div>
+
+            <button onClick={handleDownload} className="download-button">
+              Descargar Base de Datos
+            </button>
             {/* Botón para volver al home */}
             <div style={{ textAlign: 'center', marginTop: '20px' }}>
               <button
@@ -321,10 +351,7 @@ const Statistics = () => {
                 Volver al Home
               </button>
             </div>
-
           </div>
-
-
         </div>
       </div>
       <Footer />

@@ -121,6 +121,13 @@ button:hover {
   color: #333;
 }
 
+
+
+.download-button{
+  width: 300px;
+  background-color: #290000;
+}
+
 /* Estilo de los botones de navegación */
 .pagination-container button {
   background-color: #4CAF50; /* Color verde */
